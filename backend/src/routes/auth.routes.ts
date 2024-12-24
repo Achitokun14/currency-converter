@@ -18,6 +18,11 @@ const loginSchema = z.object({
   password: z.string()
 });
 
+/**
+ * @route POST /api/auth/register
+ * @group Auth - Operations about user authentication
+ * @summary Register a new user
+ */
 router.post('/register', async (req, res, next) => {
   try {
     const validatedData = registerSchema.parse(req.body);
@@ -45,6 +50,11 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+/**
+ * @route POST /api/auth/login
+ * @group Auth - Operations about user authentication
+ * @summary Login an existing user
+ */
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = loginSchema.parse(req.body);

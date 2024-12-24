@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 
+/**
+ * Interface for a conversion document in the database.
+ * @interface IConversion
+ * @property {mongoose.Types.ObjectId} user - The ID of the user who performed the conversion.
+ */
 export interface IConversion {
   user: mongoose.Types.ObjectId;
   fromCurrency: string;
@@ -10,6 +15,7 @@ export interface IConversion {
   date: Date;
 }
 
+//Schema for the conversion model
 const conversionSchema = new mongoose.Schema<IConversion>({
   user: {
     type: mongoose.Schema.Types.ObjectId,

@@ -13,6 +13,10 @@ const CurrencySchema = z.object({
 export class CurrencyService {
   private readonly baseUrl = 'https://api.frankfurter.app';
 
+  /**
+   * Retrieves a list of supported currencies from the Frankfurter API.
+   * @returns A promise that resolves to an array of strings representing the supported currencies.
+   */
   async getSupportedCurrencies(): Promise<string[]> {
     try {
       const response = await fetch(`${this.baseUrl}/currencies`);
@@ -26,6 +30,11 @@ export class CurrencyService {
     }
   }
 
+  /**
+   * Converts a given amount of currency from one currency to another using the Frankfurter API.
+   * @param data - An object containing the amount, fromCurrency, toCurrency, and userId.
+   * @returns A promise that resolves to an IConversion object representing the conversion result.
+   */
   async convertCurrency(data: z.infer<typeof CurrencySchema>): Promise<IConversion> {
     try {
       // Validate input
@@ -62,6 +71,13 @@ export class CurrencyService {
     }
   }
 
+  /**
+   * Retrieves historical exchange rates for a given currency pair between a start and end date.
+   * @param params - An object containing the fromCurrency, toCurrency, startDate, and userId.
+   * @returns A promise that resolves to an array of IConversion objects representing the historical rates.  Currently only supports fetching data for a single day.
+   * @throws {AppError} If the API request fails or the input is invalid.
+   * 
+   */
   async getHistoricalRates(params: {
     fromCurrency: string,
     toCurrency: string,
@@ -101,12 +117,22 @@ export class CurrencyService {
     }
   }
 
+  /**
+   * Retrieves the conversion history for a given user.
+   * @param userId - The ID of the user.
+   * @returns A promise that resolves to an array of IConversion objects representing the user's conversion history.
+   */
   async getUserConversionHistory(userId: string): Promise<IConversion[]> {
     return Conversion.find({ user: userId })
       .sort({ date: -1 })
       .limit(10);
   }
 
+  /**
+   * Retrieves the 5 most popular currency conversions.
+   * @returns A promise that resolves to an array of objects representing the popular conversions.  Each object contains the fromCurrency, toCurrency, count, and avgRate.
+   * 
+   */
   async getPopularConversions(): Promise<any> {
     return Conversion.aggregate([
       {

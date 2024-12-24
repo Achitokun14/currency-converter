@@ -10,6 +10,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { AppError } from './utils/errors';
 
 // Load environment variables
+// throws error if .env file is not found
 dotenv.config();
 
 if (!process.env.JWT_SECRET) {
@@ -17,6 +18,7 @@ if (!process.env.JWT_SECRET) {
 }
 
 // Create Express application
+// initialize express app
 const app = express();
 
 // Connect to MongoDB
@@ -30,6 +32,7 @@ mongoose.connect(process.env.MONGODB_URI!)
   });
 
 // Middleware
+// use helmet, cors, express.json and express.urlencoded middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -37,9 +40,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 // Routes
+// use routes from ./routes
 app.use('/api', routes);
 
 // Health check
+// health check route
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
@@ -48,6 +53,7 @@ app.get('/health', (_req, res) => {
 app.use(errorHandler as any);
 
 // Handle unhandled routes
+// handle 404 error
 app.use('*', (req, _res, next) => {
   next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));
 });
@@ -66,6 +72,7 @@ process.on('uncaughtException', (err: Error) => {
   process.exit(1);
 });
 
+// start server on port 5000 or the port specified in .env file
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -1,3 +1,4 @@
+//importing mongoose and bcrypt
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
@@ -10,6 +11,7 @@ export interface IUser {
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
+//defining the User schema
 const userSchema = new mongoose.Schema<IUser>({
   email: {
     type: String,
@@ -35,12 +37,14 @@ const userSchema = new mongoose.Schema<IUser>({
   }
 });
 
+//hashing the password before saving
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
+//comparing the password
 userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
   return await bcrypt.compare(candidatePassword, this.password);
 };

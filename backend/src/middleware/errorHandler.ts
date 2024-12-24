@@ -2,6 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../utils/errors';
 import { ZodError } from 'zod';
 
+/**
+ * Global error handler middleware for Express.js.
+ * Catches and handles various types of errors, providing appropriate responses.
+ * @param err - The error object.
+ * @param _req - The Express request object (unused).
+ * @param res - The Express response object.
+ * @param _next - The Express next function (unused).
+ */
 export const errorHandler = (
   err: Error,
   _req: Request,
